@@ -7,7 +7,7 @@ from nltk.probability import ConditionalFreqDist
 
 
 def main():
-    file = open('corpora/alice.txt', 'r')
+    file = open('full.txt', 'r')
     text = ""
     while True:
         line = file.readline()
@@ -27,7 +27,7 @@ def main():
 
     print("Enter a phrase: ")
     user_input = input()
-    predict(model, user_input)
+    predict(model, user_input, 0)
 
 
 """
@@ -102,7 +102,7 @@ def n_gram_model(text):
     dictionary (param: model), append weighted random choice to user's phrase,
     allow option to generate more words following the prediction
 """
-def predict(model, user_input):
+def predict(model, user_input, iteration):
     user_input = filter(user_input)
     user_input = user_input.split()
 
@@ -125,10 +125,11 @@ def predict(model, user_input):
     user_input.append(next_word[0])
     print(' '.join(user_input))
 
-    ask = input("Do you want to generate another word? (type 'y' for yes or 'n' for no): ")
-    if ask.lower() == 'y':
-        predict(model, str(user_input))
-    elif ask.lower() == 'n':
+    iteration += 1
+
+    if iteration < 10:
+        predict(model, str(user_input), iteration)
+    else:
         print("done")
         
 

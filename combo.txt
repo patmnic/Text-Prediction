@@ -1,0 +1,600 @@
+csc714m-ode-generation
+Created by Patricia Nicole Martinez.
+This is a Python program that generates an ode based on the theme given by the user.
+LLM API
+This program uses the Gemini 1.0 Pro LLM. It is an NLP model that can generate text and handle different tasks.
+This version of the Gemini model was chosen as it has a higher rate limit compared to the rate limit of the 1.5 version.
+Other Libraries
+This program uses the PySimpleGUI Library as the interface, as it is simple and easy to use.
+How to Run
+This program requires a Google API Key. This is free to obtain, and you can get one here.
+Assign your API key to an environment variable named GOOGLE_API_KEY.
+Alternatively, you may replace the value on the API_KEY variable in the main.py file with your API key.
+To install the required libraries, run the following command in the folder with the main.py file.
+pip install -r requirements.txt
+To run the program, run the following command in the folder with the main.py file.
+python main.py
+How to Use
+Simply type a prompt into the first box, and click the Submit button.
+The generated ode will appear in the box below.
+Lines 8 & 9 initialized the threads, while lines 10 & 12 started them.
+Two threads were created.
+The threads finished in an unexpected manner.
+As line 15 dictates that processor_a must terminate before anything else, and processor_b starts on line 16, processor b will always print after processor_a.
+Yes, it is different, as thread number 2 can exit before thread number 1.
+By allowing processor_b to start before processor_a.join(), both threads can run in parallel.
+The threads did not run simultaneously.
+Each thread slept and woke up before the next created thread would do the same.
+The join function must be removed from the given for function and moved into a separate for function, iterating through each thread to join.
+Yes, the threads ran simultaneously.
+The threads finished outside the order they were created, as shown in the printed text.
+In Fig. 4, within each loop, each thread is created and then joined before proceeding.
+This means that each thread is made to finish before the next thread can be created.
+In Fig. 5, each thread is allowed to be created and run before they are joined, allowing the threads to run simultaneously.
+The class defines the thread by its __init__ function, with three parameters: the Thread object itself, an ID, and how long the thread will sleep.
+The thread objects were created in a loop, each object initialized with an ID number and a randomly generate number as the sleep time.
+The expected value is 0, but the resulting output was -4.
+In the process of updating the variable, the thread updated the variable at the same time and collisions occurred.
+Same as above, the value was incorrect because a collision occurred, making the threads update the value simultaneously.
+To fix this, it must be ensured the variable is updated one after the other.
+The expected and actual value was 0.
+By using locks, each thread kept the other thread from proceeding until it itself had finished running a loop and unlocking.
+The same above, the actual value is the same as expected.
+Count doesn't affect that the threads operate in the way that it adds and subtracts the same amount on the same variable.
+The difference is that Fig. 8 uses locks to stop other threads from running until a crucial procedure is done, while Fig. 7 doesn't.
+Locking prevents procedures from running in the incorrect order.
+Threads can be created using the threading library.
+A thread can be implemented by initializing a Thread from threading, or defining a class that extends the threading.Thread class. 
+The ordering matters because otherwise the program may not run correctly.
+Allowing threads to update variables simultaneously without can lead to incorrect values, which can cause the rest of the program to operate incorrectly.
+0 is the intended value, as both defined threads will increment and decrement the shared_counter_without_lock variable the same amount for the same number of times.
+The final value was 5, which was different from expected.
+This is cause by collision, when the two threads draw from the counter at the same time and update accordingly without the effects of the other.
+The critical sections are the loops where the threads increment ordecrement the shared counter.
+Critical sections are sections where a global variable is accessed, and the race condition is the possible issue where unexpected results occur as a result of collisions in these sections. 
+The intended and expected values are both 0, as the two threads increment and decrement the variable the same amount overall, and locks are implemented to prevent collision. 
+The value is 0, which is correct.
+As the locks are acquired before the critical section, other threads are prevented from affecting the counter at the same time, preventing collision.
+Yes.
+The locks prevented both threads to enter the critical section at the same time, therefore solving the race condition.
+The code used mutual exclusion, as only one thread was allowed to access the critical section at a time.
+It is similar because the semaphore prevents threads from running at the same time.
+No, it did not.
+The semaphore value is the number of threads that can run through the critical section, and setting it to zero means no threads can run.
+Locks prevent all but the thread who locked from running through the critical section until release.
+Semaphores on the other hand allow for a specific number of threads to run at once.
+The final value is 0, which is correct with the intention.
+As a lock is implemented in the critical section, the thread that did not lock, once reaching just before the critical section, is forced to wait until the lock is unlocked before proceeding.
+The monitor acquires and releases the locks and semaphores within its own declared functions.
+By creating locks and semaphores with a monitor, it ensures that each thread will always lock when accessing the critical function.
+0 is the final value, which is correct with the intention.
+This is because the with statement serves to indicate the start and end of the critical section, similar to the acquire and release functions.
+The biggest benefit is that it makes it visibly clearer what the critical section is part of.
+It also ensures that the lock or semaphore will be released eventually.
+Mutual exclusion forbids access to critical sections when it is already being used by a thread.
+Synchronization, on the other hand, controls how many threads can run (in the critical section and in general) at once.
+Yes, it was for mutual exclusion as it ensured that only one thread accessed the critical sections at any given time.
+Monitors ensures that the counters it monitors cannot be modified by anything except threads with permission to access those given functions.
+It is useful when one wants to be sure that access to its monitor variables will always be restricted to avoid collision.
+The program generates a set of values in a global buffer through a producer class which is then transferred to a list owned by a consumer class.
+The list is complete because the consumer can only consume when the producer produces an item.
+The consumer thread "knows" when to proceed when the Semaphore is released.
+As the semaphore value is set to zero, the consumer is unable to proceed when it acquires, and can only do so when it is released, that is when the producer produces an item.
+It does not change, as the consumer will always acquire the semaphore before it sleeps, and the producer can call release as many times as possible even before acquire is called.
+Semaphores was used to only allow the consumer consume when the producer increased the semaphore value through release.
+This time, there are multiple created consumer threads.
+When the consumers, take the same amount of time to sleep, they consistently alternate in getting items from the producer.
+It appears the semaphore operates on a queue, allowing the consumer that called acquire first to proceed before the next.
+When the producer calls event.set(), the consumer's event.wait() signals that it can proceed, and so knows an item in the buffer is ready.
+No, some values remain in the buffer, and are not retrieved in order.
+This is caused by the delays and how event operates: event.set() permanently flags the event as true, so the consumer will proceed continuously after the first event.set().
+The producer thread calls queue.get() to signal there is data in the queue.
+The consumer thread gets the signal when it calls queue.get(), which waits until it can get an item from the queue.
+Yes, the queue can hold more than one data item at once.
+There aren't any significant changes in the program, the main change is the number of available threads.
+The queue object is not thread safe.
+From running the code, the consumers had acquired some items of the exact same value when each value item is unique.
+Mutual exclusion starts and ends by the thread that had triggered it and focuses on preventing other threads from proceeding while a thread is in a critical section, while conditional synchronization focuses on ordering threads to run in a desired order.
+Semaphore was used to signal to lock the consumer and to only allow it to proceed the number of times the producer produced an item.
+Events can be used to only allow a thread to proceed from one specific point when a certain event occurs, and is best used for a one-time condition.
+Queue objects can be used to allow threads to obtain values in a specific order.
+Events are good at prevent a thread from proceeding, but once it is set, the wait() function will no longer wait in the next calls.
+A queue is great for when obtained values must be received in a specific order, but can be prone to collision when two threads call get() at the same time.
+Semaphores can prevent threads from proceeding until it is released, and can be reused multiple times.
+However, depending on implementation, semaphore-using threads will not receive items in the chronological order, and are harder to implement for one-time-trigger conditions.
+Five processes were spawned.
+The processes were created in if __name__=="main" on line 18, using multiprocessing.Process() on line 22-23 to create them.
+There were 6 new processes.
+Theoretically, there were five processes spawned, through line 18 with myProcess() called fives times by the for loop in line 17.
+There are six new processes.
+The value of the counter is not correct because the variable is not being shared between the two processes.
+This is because spawned processes gain copies of the variables of the parent instead.
+Yes, it is consistent, as the counter is stored in a Manager class, which can be accessed by multiple processes.
+The consumer process received all the data in order, as consumer must wait on one end of the pipe to received from the processor on the other end before proceeding.
+Though not in order, all consumers were able to receive ten unique items.
+This is unlike the queue in the Python Queue library, where two threads can receive the same item.
+The difference is that Python threads run within a singular process and can access shared global variables.
+Processes are much larger, and cannot share global variables, as a global variable's scope is contained within a process.
+A multiprocessing.manager() should be used when multiple processes must share a variable they must both be able to affect.
+Pipes are used to allow communication between two processes, and are recommended when a process only needs to communicate to a certain other process.
+However, if a process wishes to send an item that should be able to be received by different processes, a queue can be used to allow any waiting process to gain the item.
+No, the URI of the object in the server is not displayed.
+It displays "Message of the day for " and then appends the name that was inputted.
+Then in the next line, it displays a randomly chosen quote saved in the motd array object.
+This output was taken from the object program.
+The object code was executed in the client because the client connected to the server through the Pyro4.Proxy() function with the object URI as its parameter. 
+By connecting this way to get to the object, the client has access to all the functions within the object.
+The object code was executed in the server.
+The Pyro4.Proxy function creates a proxy, which is an object that allows a client to send function calls to be performed by a remote object in a remote server.
+A lookup function for the URI was used to locate the object.
+PYRONAME was used to locate the object.
+It is the Pyro protocol that tells the program to look for the object with a given name within a server and get its URI.
+Remote objects are objects that reside in a remote system, and can be accessed and modified by client proxies.
+As mentioned earlier, remote objects can be invoked on another computer by using proxies, which are substitute objects that send function calls to the server object.
+Remote objects allow for multiple programs and computers to access a singular object at once, which is very useful for when multiple computers need to access and modify the same set of objects.
+The output at the remote server says it received the input message, displaying the contents of the message and the sender's name within a format similar to the format of a JSON object.
+The overall output has a very similar format to the output shown by the client.
+Only the first server that ran received the message.
+The output is pretty much identical to the output of the first version of the server.
+Both servers received the message sent.
+A message queue is used in computer systems for asynchronous communication between different processes or components.
+It allows messages to be sent from one part of a system to another, storing them until the receiving process commits the message to memory.
+There are two techniques.
+The first technique is point-to-point, where the message can only be received by one process before being removed from the queue.
+The publish-subscribe technique instead allows all connected receivers to receive the message before being removed from the queue.
+Message queues can be used to communicate asynchronously, ensuring that if the receiver gets disconnected from the queue, it will still eventually receive the message once reconnected.
+Patricia Nicole V. Martinez
+COMPUTER ARCHITECTURE EXAM
+PROBLEM 1
+As displayed in the example provided by the question, loop unrolling improves performance by reducing the number of iterations the loop needs to run through before finishing.
+Although the first C-code can be optimized by parallelization, it would not be as effective on the second C-code.
+like i am intrigued ny the character but like
+just rubs me the wrong way when answers are just Like That
+please write a sentence saying theyd dont have any of X or dont care abt Y.
+ples.
+get out of here with that "none" nonsense answer the questions properly!!!!
+Idk i felt it was more interesting than matching the blue in her gloves and leggings lol
+Probably even more thrbrd the alpha testing mobile app eas released at what, 2019
+honestly a rlly nice song tho i can see why they sampled the ringtone from it
+apparently icy and his gf applied a married couple to the isekai rp and they look v cool :0
+Cuz i know this design choice is v likely to be applied to the other fem characters yanno?
+Like sksnsknssk man why is she less covered up.
+I would've picked the male option anyways but i dont like how differently dressed they look lol
+Wuthering waves seemed interesting from what id been hearing but then i was immediately turned off by how differently dressed the male and female protags were sjdbdkrnf
+Either way i do feel like itd fit for his power to be something he might be able to use in a fight kssndk i feel like it fits him for someone who tends to be honest and speak his mind.
+Also the violence kebdkeen
+Random thought but i lowkey like the idea of Mashu's superpower being more on the protective/defensive/support side of things.
+Like saying even if he's capable of incredible violence (i love that phrase) without as much remorse as he should have, he's at his core someone who wants to protect the ppl he cares abt (his squad then and now his family :]).
+But also something more offensive fits too cuz he is Violent and way of protecting Miyu was also to fucking beat the hell out of Kenji/her kidnappers and could be smth abt taking the cruel tactics hes capable of and turning it towards cherishing the love of his life is also nice tok so skssbdkd idk hm
+Just so i hear it from ur words sjsjd what would u say is like.
+The key struggle Mashu has to deal with?
+Maybe ill get some ideas from that lol
+Guess the starting point would be how Deep do u want it to be.
+Like ideally we're gunning for something relevant to his themes/struggles right
+I just usually go with whats cool and chip away from there but i kinda do have the basis of designing my characters with a Symbol (kin assigned moji) and work from there so i prob have a head start lmao so
+Then hm.
+Im not rushing btw this is all in fun but i am curious if uve any ideas for Mashu's power skdkd idk i just think the idea of characters being born with unique powers is neat.
+Says something about them at the same time it shapes the person they become in some way too
+I do know tho is that Australia might be stricter on who applies dksjskd like cuz of my dad's age (tho hes not that old imo lol) he wouldn't rlly be permitted so that's why we're headed to NZ instead
+It does affect how long u wait in the queue tho id think sknskdej, i think they kinda stagger approvals too so not so many ppl are pouring in although yeah.
+Assuming i dont get a job b4 moving there they could speed the process as im dependent on my dad
+Not sure how it is in NZ but like.
+Im probably going to be scrutinized more if i fuck up and not get my degree when i apply to reside there
+If the unneeded training jobs pay any decent is the thing.
+Like min wage here isn't the best and most listings i see here involving computer science and honestly.
+Most office jobs on listings here Require you to have an actual degree even if it doesnt exactly fit the listing's field djdkdj
+Not sure if i want it sight or touch based still skdmm maybe sight.
+Because u kinda can only look at one guy at a time lol and it's kinda her thing that she doesn't fair well going against the crowd
+I feel like.
+With Rowan he'd have the ability to accelerate the life cycle of a living being.
+Though he's probably only used it on plants as a party trick and he can't put it on reverse which is smth he regrets when he like.
+Cant exactly undo someone bleeding out rip.
+And with Kazuko, her own power would be the ability to put any animal (including humans) to sleep but it doesn't work on herself lol
+So Miyu's i think would be something like.
+Where she can essentially freeze any living thing on its tracks temporarily, probably either touch or sight based, so it's not entirely op.
+Leaning into the them of how she's feels like everyone else around her seems to be Stuck on things of past (Kenji clinging to their past dynamic, Rosa missing the days they were always together, etc.)
+Or actually no wait i came up with something fun that i think would still sorta fit both scenarios ksnsls
+it depends on the universe if it manifests spontaneously or ppl normally have super powers and their kids inherit their powers in some sort of way because i have powers in mind for her parents lmao
+Random thought but if Mashu were to have a superpower what do u think he'd have
+I redeemed it i think but i cant check the library page to see if it really worked cuz its not fucking loading
+I do i just dunno where the place to redeem shit is so im trying to look how
+Idk.
+If i could view my diploma as something Nice to have rather than necessary to get by i think id be so much more normal lol.
+But we live in a society and all that shit
+Like.
+Its not like i dont want to work but its hard not to be stressed when failure has a fairly great chance of fucking me over
+Idk jgbvnhmb
+Thinking if UBI or some form of assurance that unemployment wouldn't be the death of me existed here i think i wouldn't care so much abt cooleg that i fantasize hurting myself to avoid being given a failing grade lol
+I think Haya would be the type to have a dildo but never use it.
+Just for the bit wjejejd
+Ur valid but ill be fine, im just the bitchiest person on the planet when its not the week after my period skdkddnd
+do u think if i died id poison the earth i was buried in because of how much negative chemicals there are in my brain
+i wish ii felt physical pain when typing but noooo my body has to be Functional and it all needs to be in my Head
+ive never understood why ppl did shit like exercise to make themselves look toned or w/e or how ppl could give up yummy food to look skinnier (altho maybe that one is more of. dieting never actually helps weight loss lmao).
+like i see the logic but why would u give a shit about it so much
+idrc abt my body ngl which is why ive nver rlly gotten into any fitness habits lol
+itll be fine the stupid shelfim kicking under the table is plastic and the table is to thick to snap when i never work out
+the wooden bit is what, as thick as my index finger lol its never gonna break if i just bang it with the side of my hand
+i know i shouldnt envy u i know its something u hate that u do but i wish i could break this detachable keyboard i have like u sometimes did without feeling like ill be outright be tortured in hell for all of eternity for trying
+i want to break something
+but all the actual fragile things i cant because i know ill have to deal with that tomorrow and i know my parents will never let me live it down
+why is all the furniture so fucking sturdy just fucking snap and cut me on the pieces so i have actual problems to cry about jfc
+i have been sitting here for what
+nearing 30 minutes
+bitching
+and im still wishing i could just grab something and be done with this all
+why did it have to be due midnight
+why the fuck do i have to do a shitty mind map
+why do i have to kjeep doing anything
+why am i here why am i here if its always going to be this way where i can never keep up with anything
+but i think i also think maybe i should commit to it because this mpa is not geting done at all
+and the time is ticking and either  i magically do this (not happening) or i have an excuse to justify failing to myself later 
+wish this table were less solid itd be great because hitting is a lot easier to commit to and if i got hurt then rip.
+but also my dad would kill me if it did break so maybe not lol.
+idk
+sorry ill stop talking abt that
+id apologize but also i feel like thatd be insincere when i genuinely kinda wish i could enact these things lol dfjkhsdkfjsd
+i wish my cramps were actually existent now at least, then id have smth to justify to myself as to why i cant do this
+"""easiest""" to inflict if ur not a wuss like me and pain also lasts longer i guess. ull need to constantly hit urself to keep it hurting but a cut always stings lol and u dont need extra effort into it
+i can see why cutting is the commonly depicted method of self harm lol.
+blunt force is not satisfying unless u use ur head but that kills brain cells and risks a concussion when u dont rlly wanna die and stabbing is risky.
+skin level injury looks safest
+itd be cool if there was a sure """safe""" place to stab. im not risking bleeding to death because of accidentally cutting a major artery or vein
+well chewing would take too long.
+even if thats all im good at doing is putting things i shouldnt in my mouth to chomp on but thats like. 
+unnecessarily prolonged and im a wuss who cant handle pain lol
+or maybe i should jhust cut it up a bit.
+that probably would heal faster but itd be enough to say i was to injured to type shit
+iu dont have time for that
+i have a little more than 4 hours left when the intended allotted time was fucking 16
+its trhe type of quiz where i cant like. move oin to the next q until im done with this
+fdfkjshdd yeah i figured im jsut "ok but is putting them next to each other tacky" like anyone would care abt that kfdjnsdfkjsdf
+would it be weird to put both sans and papyrus in the same character onion
+genuinely such a sucker for these sort of things fdksjsdk just like how i write my ocs fr
+Yea lmao
+Ngl the ego trailer is probably the most distressed ive heard him but that might be just me
+Like...
+she died thinking, hoping he wouldn't honor her last wish and he buried her that way despite his worries, wanting to be a good son at least once,,,,,,
+Well its not the prime focus on DunMeshi rn but like.
+They will touch on it a smidge.
+Eventually.
+Ye,,,
+tho its actually based on the olde medieval woven beehives
+lemme get the more on-model ref
+Ty :]
+She's nervous without the mask due to Self Image Issues but with it she gets the confidence to be a bit of a gremlin lmao
+Im glad u think so :]
+(not as harsh a circumstance but lowkey drew the idea from personal experiences sksbdkdjs being a person is Hard)
+Kinda like a harsh choose your own adventure where even ur smallest dialogue choice kinda can affect things.
+Like if you act too much like an agreeable pushover at the beginning you are going to be greyed out from assertive options because you are Mu today, if you're too open with your emotions you'll end up snapping at someone unfairly when provoked which isnt great, etc.
+The visnovel im working towards first is gonna be experimental and simple
+sksjdkd where u simulate a day in Rei's life where ur goal is to make it to ur date at the end of the day and its kinda supposed to show how much eggshells she has to walk on and how much effort she needs to put in to regulate her feelings in a regular day lmao
+Tyyyy
+Kinda been pondering on a vis novel for some "shorter" stories/segments while a more ambitious rpgmaker game would be cool for the story im writing of my main gang's main conflict but that will take a lot of time to figure lol (and also i have to art.
+Christ.)
+I do hope i can really put out the story one day aisbwksb i have like Ideas and stuff but ill need to learn how to implement it lol
+Yea
+I havent thought too deeply in terms of Serina's POV ngl sidhdkd or most of her gen.
+Like i have Key events and how their gen shapes things up to happen but its like.
+Distanced.
+i mostly view them through the lens of the aftermath/how that mess affects Rei's gen where they don't have the context and have to deal with the fucked up results that wasn't ever their fault
+Real lmao
+Lot of things are up in the air but yea a lot of things have changed abt Serina's story.
+Still goes on that lil vengeance arc when Ryuu dies until it gets complicated by toxic yuri
+turns out her gf was a serial killer.
+Fun.)
+and then its a goose chase until her ex was either arrested or killed (thinking abt it) and now she has two kids to look after lmao
+Djdkdjdld now she must Live with the Horrors
+(the kids under her wing repeating her mistakes)
+Yea
+Thinking abt how Serina used to be the fridge girl for her sibs to mourn for and now she's the fucking sole survivor
+dfkjsdlds valid lmao
+personally i just love the weird friendship/potential situationship übel and land have going on fdkjndskf
+quiet guy and the freak that wont leave em alone is one of my favorite dynamics lmao
+Hsksjwsk now that its brought up tho.
+Genuinely curious how pregnancy would be affected by how the sinners get revived and id things sisjsks theyd never explain but i gotta wonder
+(Also sorry ibeen being murdered sishskssjs always some last minute sht beung sprung)
+canto 6 has fun things happening in the fights which means ill have to redo some of them so u better be grateful /lhj
+i think we might need two sessions tbh, one for each canto
+or more
+(i love vertical spike)
+Hello!
+I am replying to note that this issue has been resolved and I have received the refund.
+Thank you!
+Dear Doc Cheng,
+Good morning! 
+I hope this email finds you well.
+Unfortunately I was only able to get to this today haha, but attached are my previous output in thesis writing.
+Due to circumstances, a lot of what I had initially aimed to convey was not written into the paper and was explained orally when I had presented, at present, to be honest I'm uncertain if this is the angle of the topic I want to pursue. 
+To summarize my initial idea, I had wanted to use the insider-outsider classification a previous research had done, with aspect-based sentiment analysis to attempt to predict if an article contained misinformation/classified as "fake news".
+Although I am uncertain if this classification is something I still wish to use for my thesis, I know that currently I'm interested in using ABSA to aid in detecting misinformation.
+Respectfully yours,
+Patricia Nicole Martinez
+Hi Doc Ethel,
+Good afternoon!
+Apologies for the delay of reply.
+My potential research topic essentially involves using sentiment analysis or text classification to determine if an input text contains misleading or false information.
+Respectfully yours,
+Patricia Nicole Martinez
+Dear Dr. Ethel,
+Good evening!
+I hope this email finds you well.
+Would it be alright if I were to finalize whether or not I will be choosing to enroll in MSLABS1 and quite possibly the other courses too by Thursday morning?
+My practicum had to be deferred, and so my internship overlaps with the upcoming term.
+As such, I will need to take advising of which courses I can take alongside this, and the soonest slot I could reserve for it is on Thursday morning.
+Best regards,
+Patricia Nicole Martinez
+Hi Dr. Ethel,
+Good morning! 
+I have just finished my course advising and would like to confirm my previous choices in that I'll be taking CSC615M and CSC713M, and that I will not be taking MSLABS1 this term.
+Thank you, and I hope you have a good day.
+Best regards,
+Patricia Nicole Martinez
+Dear Ms. Pau,
+Good day!
+As there have been numerous delays regarding the MOA with my company, I fear I will not be able to render the full 320 hours required before the end of the term, so I would like to inquire what would happen should I need to defer my Practicum course.
+Would I still be allowed to enroll in other courses while my grade is deferred? If I am allowed to do so, am I allowed to enroll for a total greater than 6 units should I finish my internship before the next term's classes start?
+Thank you for your time and consideration.
+Respectfully yours,
+Patricia Nicole Martinez
+Dear Ms. Pau,
+Thanks for your reply. Calculating the number of days I'll be at my internship, as it currently stands it's likely I'll be finishing one to several weeks into the upcoming term best to worst-case scenario, and am currently discussing with the company how my workdays would be into the start of next term to avoid schedule conflict.
+However, in the scenario that I enroll in classes that conflict with my internship shift, is there a way I can be excused for my absences during the classes in that period?
+Respectfully yours,
+Patricia Nicole Martinez
+Dear Ms. Pau,
+Good evening! I will keep that in mind, thank you.
+I am emailing my other inquiry here to keep our discussion on one thread. May I ask why my MOA was disapproved? I had noticed that my card was moved to that column of the Trello board.
+Also, now that my Project Details have been approved, may I request for my company's name to be added to the Company Details board? The name "FactSet Philippines, Inc." has yet to be added to the form.
+Respectfully yours,
+Patricia Nicole Martinez
+Dear Ms. Pau,
+Good evening! I hope this email finds you well.
+As part of the requirements of the company I am to intern at, I am required to submit Proof of Internship Enrollment, which is indicated as a separate document from the Endorsement Letter I have also been requested to provide.
+As such, I would like to inquire what I should submit as Proof of Internship Enrollment, and if there is anything I need to fulfill to do so.
+On that note, I would also like to notify you that I have submitted my Endorsement Letter to be signed through AnimoSpace and Trello.
+Thank you for your time and consideration.
+Respectfully yours,
+Patricia Nicole Martinez
+Dear Miss Rinoza,
+Good evening! I hope this email finds you well.
+I have re-recorded my interview, and have submitted it in the comment section as instructed.
+My SAS3000 section is S11.
+Please let me know if there is anything else I need to do.
+Thank you!
+Respectfully,
+Patricia Nicole Martinez
+Dear Miss Dacanay,
+Good evening!
+I am replying to confirm I am proceeding with the degree in the BSMSCS program.
+Thank you!
+Respectfully,
+Patricia Nicole V. Martinez
+ID12011657
+Dear Tita Ivy,
+Good evening po!
+Sorry for the delay, the current term had just recently ended, and I had been waiting for my current cumulative GPA to be calculated (and am still waiting).
+But since it's still not loading, attached is my CV with my cumulative GPA from last semester.
+Thank you so much!
+Sincerely,
+Tricia
+Dear Prof. Samson,
+Good morning!
+I am emailing to confirm my slot in the BSMSCS program.
+Thank you, and have a great day.
+Respectfully,
+Patricia Nicole V. Martinez
+ID12011657
+To whom it may concern,
+Good evening!
+Enclosed in this email is my JO application, alongside my Creatives portfolio as I am applying for the Design sub-department of the Creatives department.
+For any inquiries, please do not hesitate to contact me.
+Sincerely,
+Patricia Nicole Martinez
+To whom it may concern,
+Good evening!
+I hope this email finds you well.
+I would like to inquire as to how I may regain access to my account.
+A few days prior, I had been able to access my MLS account and my courses just fine, but today, when I had attempted to log-in to MLS, I had discovered my access was discontinued due to non-payment, despite having paid last August 30 (Reference Number 20221-12011657-0).
+As the form for requesting reinstatement had closed two days ago, I am emailing to inquire how I may resolve this issue, as I would need a print out of my MLS grades to apply to the BSMSCS program, and the applications are due on Friday.
+Thank you for your time and I look forward to hearing from you.
+Dear Ms. Villorente,
+Good morning!
+I hope this email finds you well.
+Could I possibly request that you fill a recommendation letter for me?
+As my admission credentials are missing my recommendation letters, I had made a request to Sir Chavez (as he had been my counselor when I had sessions in Senior High at DLSU) and he had redirected me to you.
+Hoping for your kind consideration, and thank you for your time.
+Sincerely,
+Patricia Nicole Martinez
+Dear Ms. Villorente,
+Good evening!
+I hope this email finds you well.
+This is Nikki, formerly ID11850027 during my senior high school days in DLSU Taft.
+I am just emailing to follow-up on this request.
+I am also emailing to note that I would be needing to submit a physical copy, which would mean I would have to meet you in person to receive it.
+I am willing to provide a physical copy of the form itself, along with an envelope to seal it with.
+Would it be possible to meet you so you may fill in the recommendation form for me?
+I look forward to hearing from you!
+I hope you have a wonderful week ahead.
+Sincerely,
+Patricia Nicole Martinez
+Dear Ms. Villorente,
+Good day!
+As I was unsure of which ID number you had required, I stated both my previous ID number when I was in SHS, and my current ID number as a college student.
+Here are my details:
+Complete Name: Martinez, Patricia Nicole Valdez
+ID Number: 11850027 / 12011657
+DLSU 10-digit application number: 1000228973
+Campus: Manila
+Thank you so much! May you have a blessed day.
+Respectfully yours,
+Patricia Nicole Martinez
+Dear Ms. Villorente,
+Acknowledged, thank you so much!
+I would like to double-check, however, may I enquire if the recommendation form will still be processed if I'm not a freshman or transferee?
+I had noticed that the title of the Google Form says it is for incoming students, but I have been a student here for more than two years and am only taking one degree.
+I had only recently been informed that my recommendation letters are missing from my credentials, so I worry if I do not accomplish this by the deadline, my enrollment next term would be on hold.
+I apologize if this is redundant, and again thank you so much for your time!
+Respectfully yours,
+Patricia Nicole Martinez
+Dear Ms. Villorente,
+Good afternoon!
+I hope this email finds you well.
+Could I request that a copy of my recommendation form be sent to admissions@dlsu.edu.ph?
+I had went to submit my admission requirements today and when they checked, they couldn't find the recommendation letter you submitted for me in the forms.
+As such, they told me to request you send the form directly to admissions with the subject "Recommendation Letter - Learning".
+Thank you very much, and have a great day!
+Sincerely yours,
+Patricia Nicole Martinez
+Dear Sir Pol,
+Good evening!
+Unlike the raucous chorus laughter that resounded earlier, all that accompanies Yuuya is the quiet, monotonous ticking.
+The first time, he felt scared, the dust suffocating, the darkness hiding the source of the crawling feeling of his skin.
+The seventh time, he felt annoyed, for he would definitely be marked for skipping classes, and the stains on his uniform would be inconvenient to clean out.
+This time, he feels bored, for the time passes on terribly slowly in here.
+He's taken to scrolling away at his phone, reading another "romance" novel he's been recommended.
+The appeal of these stories is lost to him, but still, he finds nothing better to do.
+He wonders when they'll get as bored as he is of this routine.
+His phone buzzes, with a message right on schedule.
+stck agn?
+He sighs, typing his reply.
+Do you even have to ask?
+He receives no reply, but he knows it's been read.
+It doesn't take long for the quietest footsteps to start and end close to the door.
+After a little moment, fiddling with the pick he presumes, and the lock clicks, and the cabinet door opens to reveal the person he was expecting, rose-colored glasses, freckled copper skin, and tidied crimson hair in all its glory.
+"Hello," she calmly greets, right on schedule.
+Yuuya says nothing as he accepts the hand reached out to him, and he's pulled into a hug.
+"The ingredients you asked for came in today," she murmurs, as if that were the most comforting thing to say in the world.
+Yuuya only makes an affirmative noise in response, his hand rubbing soothing circles, as if she were the one who needed to be comforted instead. 
+She pulls away and turns, and he follows after.
+As she lays in bed, tucked into the fresh blanket, the stickers on the ceiling faintly glow, like the ever-so-distant stars of the night sky.
+She sighs. 
+The room is shrouded in darkness, the light too dim to reach.
+The sweet scent of cologne was replaced with a fresher scent of camellia.
+She's sure if she were to gaze upon herself, not a blemish would be seen upon her skin.
+Not a mark from the time they've spent together.
+Not a thread out of place.
+She supposes that's something to be happy about.
+To be able to pretend nothing happened.
+Just as she wished.
+When he returns, she pulls him close, and her ache dulls.
+The slam finally pulls Mu into reality.
+That's going to bruise, is what the aching of her back says.
+But Mu never lets that aching, the sharper ache on her shoulder, or the even sharper, colder blade against her neck bother her.
+For the briefest moment, all that fills the air is the heavy breathing of the dearest person to her, and faint, distant music.
+"Are you okay, Kana-sama?"
+She asks those magic words softly, without a hint of fear.
+Like magic, it seems to break the spell the older woman is under, and for the briefest moment, Mu catches the ever-so-familiar guilt in Kanako's eyes.
+It’s vindicating, the way her grip loosens, her blade tucked away, her would’ve-been assailant’s back turning as she catches her breath.
+It tells Mu she hasn’t lost that touch yet.
+That she's still worthy of feeling guilty over.
+Freed, Mu leans back against the wall and properly surveys the area, the bodies strewn around in the dark alley, musing on Kanako’s work.
+It’s her turn now.
+Unconscious those bodies are, she finds as she crouches over one, rummaging through their pockets for anything useful.
+She enumerates her loot as she tucks each useful item into her bag.
+A pocket knife, a pack- no, two packs of gum, a pitifully empty wallet, a bloody knuckleduster, a- 
+"Rei," finally came that familiar call.
+She glances up, seeing Kanako's composure finally regained mostly, the older woman’s gaze unable to properly meet her own. 
+"Let's go."
+Kenji wasn't sure what spurred this on this time.
+Was it something he did?
+Was there something he missed?
+He can't be entirely sure anymore.
+She's become distant recently.
+If you were to ask him, he'd compare her to the tide.
+Her eyes reminded him of the sea they would watch together a lifetime ago, her affections rising and falling in an eternal cycle.
+A vicious cycle, but a cycle he grew to rely on.
+When he reached for her, she flinched.
+In spite of that, he simply pulled her close with a faint smile, as he always did, doing his best to soothe her aches.
+She was tense, that he knew.
+But from what, he was uncertain.
+He's been uncertain for a while now.
+"What are you thinking about?"
+He whispered, brushing his hand through her tangled hair, sticky with sweat.
+"It's nothing," was her soft reply, filled with neither the fear the defiance he'd expect to face.
+But he knew it wasn't the farce of indifference either.
+He pushed as he always did, but light provocation from him went unmet, and even the whispers of reverence, of what was buried provoked no reaction as he wiped her silent tears away.
+It's been that way for a while now, too.
+Was he losing his touch?
+Before he can further that line of thought, she leaned into his chest.
+"Let's just sleep, okay?"
+She huffs, bemusement creeping in.
+He fell silent and finally sighed, pulling her closer.
+Rei peers at the window.
+It’s a sunny day outside, true, but her focus is on the grill affixed onto it.
+They’re with a geometrical pattern, of circles and lines, divided into halves that can be swung open.
+Theoretically.
+It’s a pretty fixture, if not old, with the white paint flaking to reveal rusted steel.
+When she first saw these when she was brought to this house, far too distracted by the encouraging words woven for her naive little heart, she thought it was something pretty to look at.
+But she knows now that they’re nothing more than bars of her cage, still serving their purpose long after the person who led her to this prison is long gone.
+She reaches for the lock that keeps the grill closed, praying, but it was for naught.
+The lock was replaced with something heavier-duty, something far more resistant to picking.
+So that’s another key to look for, or if it was kept elsewhere as she feared, her final avenue exhausted due to her lack of preparation from last time…
+She bashes her hand against the grill, irritated, but all she earns for her troubles is a bruise.
+One she’ll have to hide, she thinks as she rubs at it, if she doesn’t want him to drop everything and stick to her like a leech again until it fades…
+Isn’t that fine, though?
+It’s getting lonely here…
+She grips herself, and takes deep breaths, taking care to reason with herself exactly how horrible of an idea it is, to give him further reason to stay longer.
+Have you forgotten what he’s done already?
+Although slipping off her glove, she grimaces, realizing how hard she’s hit, the side of her palm discolored.
+She heads off to the kitchen.
+Hopefully an ice pack would help it down to something more manageable to hide.
+If not…
+Yet another thing to add to the pile of reasons to keep her here, another shovel of dirt she’s dug for herself.
+A violent animal shouldn’t be let out of its cage.
+"That was a lie, right?"
+Kazuko says nothing, her back turned as she marches forward.
+"Raz…
+Raz didn’t kill him for such a worthless reason, right?"
+Kazuko still says nothing.
+The silence is unbearable.
+"This is…
+that was just a test.
+Surely, they… they wouldn’t…"
+Kazuko’s chest tightens as her companion murmurs repeated denials over and over and over, as the girl tries to reason it all out.
+"You know better, don’t you, Samael?"
+The man she once considered the devil asked, his mismatched eyes glimmering with amusement.
+"Sama, tell me…"
+She feels her sleeve tugged, and she turns to see those beautiful, golden, artificial eyes pleading desperately, the haughtiness that was always found now nowhere to be seen.
+Isn’t that just precious?
+The once high and mighty keeper of justice is now reduced to a quivering mess.
+But despite her hatred, Kazuko feels what she can only describe as guilt at what she brought about.
+What her curiosity brought about, what her resolve-
+Unlike her, who remembers a life before this, this was all Raziel knew, wasn’t it?
+If that tiniest, insignificant fact was enough to shake her, what more would the reality of everything do?
+Still, Kazuko isn’t one to forget.
+Kazuko harshly tugs her arm away from Raziel—Yoshiko, she had learned.
+"Don’t let them see you like this."
+She warns coldly.
+Before the pitiful girl could respond, before she could regret her decision, Kazuko continued forward without looking back.
+Unlike the first, where he whispered her name like a prayer,
+Unlike the second, where he taunted her so viciously,
+For once, he says nothing.
+Unlike the first, where she could clearly feel his breath shallow,
+Unlike the second, where he had the energy to laugh,
+For once...
+But as always, he has a smile on his face. 
+Even with everything, he remains the same.
+'What will you do?'
+he would ask her each time,
+'What will you do when I'm dead?'
+The first, she only turn and ran, unable to handle the weight.
+The second, she proclaimed her intent so proudly.
+But still, she crumbled under the weight.
+The third...
+Click.
+Of course it was empty.
+Trembling hands grip the crimsoned blade, and the composure she felt escapes her.  
+What was she meant to feel now?
+There’s no reason to stay in this place anymore.
+Releasing a quiet, shaky breath, she stares with uncertainty. 
+Where is a ghost meant to go when there’s nowhere to move on to?
+It faintly registers in Kei’s thoughts, as the crimson stains the bed, that no one could survive that much blood loss.
+He wasn’t sure what he would have done if Masaya were still awake when he slipped in.
+He wasn’t sure if he would have had the heart if he’d have offered that same, warm smile he always did.
+Would he have even shown that smile, if Ares asked him why?
+It was quiet that night.
+A crumpled of paper bounces from Ares’s head to his desk.
+You okay? 
+His head swivels to the desk next to his.
+Rei offers him a smile as they tilt their head in a gesture.
